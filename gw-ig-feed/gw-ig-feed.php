@@ -14,11 +14,11 @@ error_reporting(E_ERROR | E_PARSE);
 
 //Actions
 add_action('admin_menu', array('InstagramGW','instagram_gw_admin_call'));
-add_shortcode('GW-IG-FEED', array('InstagramGW','instagram_gw_shortcode'));
+add_shortcode('GW-IG-Feed', array('InstagramGW','instagram_gw_shortcode'));
 
 class InstagramGW {
     public function instagram_gw_admin_call(){
-        add_menu_page( 'GW-IG-FEED Administration', 'GW-IG-FEED', 'manage_options', 'gw-ig-feed-plugin', array('InstagramGW','instagram_gw_admin'));
+        add_menu_page( 'GW-IG-Feed Administration', 'GW-IG-Feed', 'manage_options', 'gw-ig-feed-plugin', array('InstagramGW','instagram_gw_admin'));
     }
     public function instagram_gw_admin() {
         include("config.php");
