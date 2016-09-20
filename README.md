@@ -1,6 +1,6 @@
-##GW-IG-FEED
+##GW-IG-Feed
 
-GW-IG-FEED is an Instagram feed plugin made by [George Whitcher](http://georgewhitcher.com).  Due to restrictions on the Instagram API you can only get 20 items at this time.
+GW-IG-Feed is an Instagram feed plugin made by [George Whitcher](http://georgewhitcher.com).  Due to restrictions on the Instagram API you can only get 20 items at this time.
 
 1. Download and extract contents to the /wp-content/plugins/ folder
 2. Activate plugin.
@@ -11,10 +11,10 @@ GW-IG-FEED is an Instagram feed plugin made by [George Whitcher](http://georgewh
 7. Use the shortcode or PHP code provided below to display your Instagram feed.
 
 ####Shortcode
-Instagram GW comes with a shortcode.  Once configured you can display the feed anywhere you like with simply inserting [INSTAGRAM-GW] into any page.
+GW-IG-Feed comes with a shortcode.  Once configured you can display the feed anywhere you like with simply inserting [INSTAGRAM-GW] into any page.
 
 ####PHP
-To insert Instagram GW into a PHP page, activate the plugin and then enter the following into the page in which you would like it displayed.
+To insert GW-IG-Feed into a PHP page, activate the plugin and then enter the following into the page in which you would like it displayed.
 
 1. $instagramgw = new InstagramGW();
 2. $instagramgw->instagram_gw_shortcode();
