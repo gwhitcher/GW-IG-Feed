@@ -1,0 +1,34 @@
+/* Instagram Plugin */
+.instagram-gw {
+    float: left;
+    clear: both;
+    width: 100%;
+}
+.instagram-unit {
+    max-width: 310px;
+    width: 100%;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 30px;
+    border: 1px solid #CCC;
+    padding: 5px;
+    border-radius: 5px;
+}
+.instagram-unit img {
+    max-width: 300px;
+}
+.instagram-unit a:hover {
+    text-decoration: none;
+    cursor: pointer;
+}
+.instagram-unit .center-block {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+.instagram-gw .instagram-gw-pagination {
+    float: left;
+    clear: both;
+    width: 100%;
+}
