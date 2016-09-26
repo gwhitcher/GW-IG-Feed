@@ -1,4 +1,6 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+
 $msg = 'Sign in with Instagram first...';
 if(!empty($_GET['access_token'])) {
     $get_access_token = $_GET['access_token'];
@@ -7,26 +9,23 @@ if(!empty($_GET['access_token'])) {
 } else {
     $get_access_token = $msg;
 }
-if(defined('INSTA_USERNAME')) {
-    $get_username = INSTA_USERNAME;
-} else {
-    $get_username = '';
-}
-if(defined('INSTA_COUNT')) {
-    $get_count = INSTA_COUNT;
-} else {
-    $get_count = 20;
-}
+
+if(defined('INSTA_USERNAME')) { $get_username = INSTA_USERNAME; } else { $get_username = ''; }
+if(defined('INSTA_COUNT')) { $get_count = INSTA_COUNT; } else { $get_count = 20; }
+
 if(!empty($_POST['submit'])) {
+
+    $nonce = $_REQUEST['_wpnonce'];
+    if(!wp_verify_nonce($nonce, 'gw-ig-feed')) die("Security check");
 
     if($_POST['access_token'] == $msg) {
         echo '<script>';
         echo 'alert("'.$msg.'");';
         echo '</script>';
     } else {
-        $post_access_token = $_POST['access_token'];
-        $post_username = $_POST['username'];
-        $post_count = $_POST['count'];
+        $post_access_token = sanitize_text_field($_POST['access_token']);
+        $post_username = sanitize_text_field($_POST['username']);
+        $post_count = intval($_POST['count']);
         $instagramgw = new InstagramGW();
         $instagramgw->instagram_gw_config($post_access_token, $post_username, $post_count);
         echo '<script>';
@@ -35,22 +34,20 @@ if(!empty($_POST['submit'])) {
         echo '</script>';
     }
 }
-$plugin_url = plugins_url().'/gw-ig-feed';
 $current_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 ?>
-<link href="<?php echo $plugin_url;?>/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="<?php echo $plugin_url;?>/css/styles.css" rel="stylesheet">
-<h1 class="page-header">Instagram GW Administration</h1>
+<h1 class="page-header">GW-IG-Feed Administration</h1>
 
 <div class="container">
 
     <div class="alert alert-success">
-        <p>Before you can use Instagram GW you need to get an access_token and add your username.  Sign in with the button below to authorize Instagram GW and then save the access_token and username you just authorized by submitting the form below.</p>
+        <p>Before you can use GW-IG-Feed you need to get an access_token and add your username.  Sign in with the button below to authorize GW-IG-Feed and then save the access_token and username you just authorized by submitting the form below.</p>
     </div>
 
     <p><a href="https://api.instagram.com/oauth/authorize/?client_id=d1b6241d1a9f4e279061c7d4aa456cb8&scope=basic+public_content&redirect_uri=http://georgewhitcher.com/instagram?return_url=<?php echo $current_url; ?>&response_type=token" class="btn btn-primary">Sign in with Instagram</a></p>
 
-    <form class="form-horizontal" enctype="multipart/form-data" method="post" accept-charset="utf-8" action="<?php esc_url( $_SERVER['REQUEST_URI'] ); ?>">
+    <?php $nonce = wp_create_nonce('gw-ig-feed'); ?>
+    <form class="form-horizontal" enctype="multipart/form-data" method="post" accept-charset="utf-8" action="<?php echo $current_url; ?>&_wpnonce=<?php echo $nonce; ?>">
 
         <div class="form-group">
             <label for="access_token" class="col-sm-2 control-label">Access Token</label>
@@ -82,7 +79,7 @@ $current_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 
 <h2 class="page-header">Integration</h2>
     <div class="alert alert-success">
-        <p>To integrate Instagram GW use one of the below methods.</p>
+        <p>To integrate GW-IG-Feed use one of the below methods.</p>
     </div>
 <form class="form-horizontal">
     <div class="form-group">
@@ -143,7 +140,5 @@ foreach ($instaData->data as $instaPost) {
         </div>
     </div>
  </form>
-
 </div>
-<script src="<?php echo $plugin_url;?>/jquery/jquery.min.js"></script>
-<script src="<?php echo $plugin_url;?>/bootstrap/js/bootstrap.min.js"></script>
+

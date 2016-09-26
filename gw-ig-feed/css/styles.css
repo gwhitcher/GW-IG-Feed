@@ -17,6 +17,7 @@
 }
 .instagram-unit img {
     max-width: 300px;
+    width: 100%;
 }
 .instagram-unit a:hover {
     text-decoration: none;
@@ -31,4 +32,29 @@
     float: left;
     clear: both;
     width: 100%;
+}
+.instagram-widget {
+    max-width: 350px;
+    width: 100%;
+    display: block;
+    float: left;
+    overflow: hidden;
+    margin: 5px;
+    border: 1px solid #CCC;
+    padding: 5px;
+    border-radius: 5px;
+    text-align: center;
+}
+.instagram-widget img {
+    max-width: 600px;
+    width: 100%;
+}
+.instagram-widget a:hover {
+    text-decoration: none;
+    cursor: pointer;
+}
+.instagram-widget .center-block {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
