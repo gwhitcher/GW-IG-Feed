@@ -1,6 +1,6 @@
 ##GW-IG-Feed
 
-GW-IG-Feed is an Instagram feed plugin made by [George Whitcher](http://georgewhitcher.com).  Due to restrictions on the Instagram API you can only get 20 items at this time.
+GW-IG-Feed is an Instagram feed plugin made by [George Whitcher](http://georgewhitcher.com) for [Wordpress](http://wordpress.org).  Due to restrictions on the Instagram API you can only get 20 items at this time.
 
 1. Download and extract contents to the /wp-content/plugins/ folder
 2. Activate plugin.
