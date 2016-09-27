@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: GW-IG-Feed
- * Plugin URI: http://georgewhitcher.com/instagram-gw/
+ * Plugin URI: http://georgewhitcher.com/gw-ig-feed/
  * Description: This is an Instagram plugin for Wordpress made by George Whitcher.
  * Version: 1.0.0
  * Author: George Whitcher
@@ -14,15 +14,27 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 //Actions
 add_action('admin_menu', array('InstagramGW','instagram_gw_admin_call'));
 add_shortcode('GW-IG-Feed', array('InstagramGW','instagram_gw_shortcode'));
-function myplugin_register_widgets() {
+function instagram_gw_register_widgets() {
     register_widget( 'InstagramGW' );
 }
-add_action( 'widgets_init', 'myplugin_register_widgets' );
+add_action( 'widgets_init', 'instagram_gw_register_widgets' );
 
 class InstagramGW extends WP_Widget {
     function __construct() {
-        // Instantiate the parent object
         parent::__construct( false, 'GW-IG-Feed' );
+        $this->instagram_gw_enqueue();
+    }
+    public function instagram_gw_enqueue()
+    {
+        if($_GET['page'] == 'gw-ig-feed-plugin' OR INSTA_BOOTSTRAP == 1) {
+            wp_register_style( 'instagram_gw_bootstrap', plugins_url( 'bootstrap/css/bootstrap.min.css', __FILE__ ) );
+            wp_enqueue_style( 'instagram_gw_bootstrap' );
+            wp_register_script( 'instagram_gw_bootstrap-js', plugins_url( 'bootstrap/js/bootstrap.min.js', __FILE__ ) );
+            wp_enqueue_script( 'instagram_gw_bootstrap-js' );
+        } else {
+            wp_register_style( 'instagram_gw_styles', plugins_url( 'css/styles.css', __FILE__ ) );
+            wp_enqueue_style( 'instagram_gw_styles' );
+        }
     }
     public function instagram_gw_admin_call(){
         add_menu_page( 'GW-IG-Feed Administration', 'GW-IG-Feed', 'manage_options', 'gw-ig-feed-plugin', array('InstagramGW','instagram_gw_admin'));
@@ -31,10 +43,10 @@ class InstagramGW extends WP_Widget {
         include("config.php");
         include("administration.php");
     }
-    public function instagram_gw_config($access_token=NULL, $username=NULL, $count=NULL) {
+    public function instagram_gw_config($access_token=NULL, $username=NULL, $count=NULL, $bootstrap=NULL) {
         $filename = dirname(__FILE__).'/config.php';
         $f = fopen($filename, "w");
-        $msg = "<?php \ndefine('INSTA_ACCESS_TOKEN','".$access_token."');\ndefine('INSTA_USERNAME','".$username."');\ndefine('INSTA_COUNT','".$count."');";
+        $msg = "<?php \ndefine('INSTA_ACCESS_TOKEN','".$access_token."');\ndefine('INSTA_USERNAME','".$username."');\ndefine('INSTA_COUNT','".$count."');\ndefine('INSTA_BOOTSTRAP','".$bootstrap."');";
         fwrite($f, $msg);
         fclose($f);
         chmod($filename, 0777);
@@ -52,13 +64,8 @@ class InstagramGW extends WP_Widget {
         $instagram_feed_json = file_get_contents($instagram_feed_json_url);
         $instagram_feed = json_decode($instagram_feed_json);
         return $instagram_feed;
-    }function widget($args, $instance) {
-        //wp_register_style( 'bootstrap-css', plugins_url( '/gw-ig-feed/bootstrap/css/bootstrap.css' ) );
-        //wp_enqueue_style( 'bootstrap-css' );
-        //wp_register_script( 'bootstrap-js', plugins_url( '/gw-ig-feed/bootstrap/js/bootstrap.js' ) );
-        //wp_enqueue_script( 'bootstrap-js' );
-        wp_register_style( 'styles', plugins_url( '/gw-ig-feed/css/styles.css' ) );
-        wp_enqueue_style( 'styles' );
+    }
+    function widget($args, $instance) {
         extract( $args );
         $title 		= apply_filters('widget_title', $instance['title']);
         echo $before_widget;
@@ -79,7 +86,7 @@ class InstagramGW extends WP_Widget {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Instagram Image Preview</h4>
+        <h4 class="modal-title"><a href="http://instagram.com/'.INSTA_USERNAME.'" target="_blank">'.INSTA_USERNAME.'</a></h4>
       </div>
       <div class="modal-body">
         <img class="img-responsive center-block" src="'.$instagram_post->images->standard_resolution->url.'" alt="'.$instagram_post->caption->text.'" />
@@ -122,12 +129,6 @@ class InstagramGW extends WP_Widget {
         <?php
     }
     public function instagram_gw_shortcode() {
-        wp_register_style( 'bootstrap-css', plugins_url( '/gw-ig-feed/bootstrap/css/bootstrap.css' ) );
-        wp_enqueue_style( 'bootstrap-css' );
-        wp_register_script( 'bootstrap-js', plugins_url( '/gw-ig-feed/bootstrap/js/bootstrap.js' ) );
-        wp_enqueue_script( 'bootstrap-js' );
-        wp_register_style( 'styles', plugins_url( '/gw-ig-feed/css/styles.css' ) );
-        wp_enqueue_style( 'styles' );
         $instagramgw = new InstagramGW();
         $instagramgw_data = $instagramgw->instagram_gw_init();
         $instagram_data_display = '<div class="instagram-gw">';
@@ -145,7 +146,7 @@ class InstagramGW extends WP_Widget {
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Instagram Image Preview</h4>
+        <h4 class="modal-title"><a href="http://instagram.com/'.INSTA_USERNAME.'" target="_blank">'.INSTA_USERNAME.'</a></h4>
       </div>
       <div class="modal-body">
         <img class="img-responsive center-block" src="'.$instagram_post->images->standard_resolution->url.'" alt="'.$instagram_post->caption->text.'" />

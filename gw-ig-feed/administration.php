@@ -1,17 +1,10 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-$msg = 'Sign in with Instagram first...';
-if(!empty($_GET['access_token'])) {
-    $get_access_token = $_GET['access_token'];
-} elseif(defined('INSTA_ACCESS_TOKEN')) {
-    $get_access_token = INSTA_ACCESS_TOKEN;
-} else {
-    $get_access_token = $msg;
-}
-
+if(!empty($_GET['access_token'])) { $get_access_token = $_GET['access_token']; } elseif(defined('INSTA_ACCESS_TOKEN')) { $get_access_token = INSTA_ACCESS_TOKEN; } else { $get_access_token = 'Sign in with Instagram first...'; }
 if(defined('INSTA_USERNAME')) { $get_username = INSTA_USERNAME; } else { $get_username = ''; }
 if(defined('INSTA_COUNT')) { $get_count = INSTA_COUNT; } else { $get_count = 20; }
+if(defined('INSTA_BOOTSTRAP')) { $get_bootstrap = INSTA_BOOTSTRAP; } else { $get_bootstrap = false; }
 
 if(!empty($_POST['submit'])) {
 
@@ -26,8 +19,9 @@ if(!empty($_POST['submit'])) {
         $post_access_token = sanitize_text_field($_POST['access_token']);
         $post_username = sanitize_text_field($_POST['username']);
         $post_count = intval($_POST['count']);
+        $post_bootstrap = sanitize_text_field($_POST['bootstrap']);
         $instagramgw = new InstagramGW();
-        $instagramgw->instagram_gw_config($post_access_token, $post_username, $post_count);
+        $instagramgw->instagram_gw_config($post_access_token, $post_username, $post_count, $post_bootstrap);
         echo '<script>';
         echo 'alert("Data saved!");';
         echo 'window.location.reload();';
@@ -71,6 +65,16 @@ $current_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
         </div>
 
         <div class="form-group">
+            <label for="bootstrap" class="col-sm-2 control-label">Bootstrap</label>
+            <div class="col-sm-10">
+                <select class="form-control" id="bootstrap" name="bootstrap">
+                    <option <?php if(INSTA_BOOTSTRAP == 1) { echo 'selected="selected"'; } ?> value="1">Enabled</option>
+                    <option <?php if(INSTA_BOOTSTRAP == 0) { echo 'selected="selected"'; } ?>value="0">Disabled</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <input type="submit" id="submit" name="submit" class="btn btn-default" value="Submit">
             </div>
@@ -85,7 +89,7 @@ $current_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
     <div class="form-group">
         <label for="access_token" class="col-sm-2 control-label">SHORTCODE</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" id="access_token" name="access_token" placeholder="<?php echo $msg; ?>" value="[INSTAGRAM-GW]" readonly>
+            <input type="text" class="form-control" id="access_token" name="access_token" placeholder="<?php echo $msg; ?>" value="[GW-IG-Feed]" readonly>
         </div>
     </div>
 
@@ -123,7 +127,7 @@ foreach ($instaData->data as $instaPost) {
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Instagram Image Preview</h4>
+                    <h4 class="modal-title"><a href="http://instagram.com/'.INSTA_USERNAME.'" target="_blank">'.INSTA_USERNAME.'</a></h4>
                   </div>
                   <div class="modal-body">
                     <img class="img-responsive center-block" src="'.$instaPost->images->standard_resolution->url.'" alt="'.$instaPost->caption->text.'" />
@@ -141,4 +145,3 @@ foreach ($instaData->data as $instaPost) {
     </div>
  </form>
 </div>
-
